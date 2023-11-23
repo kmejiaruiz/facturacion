@@ -4,6 +4,8 @@ body {
 }
 
 header {
+  display: flex !important;
+  justify-content: space-between;
   background-color: #3498db;
   color: white;
   padding: 10px 0;
@@ -13,6 +15,12 @@ header {
   top: 0;
   left: 0;
   width: 100% !important;
+}
+
+.span{
+  display: grid;
+  place-items: center;
+  margin-right: 20px;
 }
 
 h1 {
@@ -28,6 +36,7 @@ h1 {
   text-decoration: none;
   border-radius: 4px;
   margin-left: 20px;
+  text-align: center;
   transition: background-color 0.3s ease;
 }
 
@@ -118,6 +127,17 @@ th {
   color: #6a2b31;
 }
 
+.contenedor-fecha{
+  background: #cff4fc;
+  color: #1b6371;
+  padding: 10px 15px;
+  border: 1px solid #b6effa;
+  margin-top: 10px;
+  /* text-align: center; */
+  border-radius: 10px;
+  width: max-content;
+}
+
 /* media querys */
 @media (max-width: 600px) {
   form {
@@ -133,5 +153,16 @@ th {
 
   button {
     padding: 8px 12px;
+  }
+  .span{
+    margin: 0 !important;
+    text-align: right; 
+  }
+}
+@media print{
+  .contenedor-alerta{
+    display: none;
+    width: 0;
+    height: 0;
   }
 }

@@ -13,7 +13,7 @@
     <?php
     // Verificar si la solicitud proviene de index.php
     $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
-    $paginaAutorizada = 'http://localhost/facturacion/index.php';  // Reemplaza con la URL correcta de tu aplicación
+    $paginaAutorizada = 'http://localhost/facturacion/php/';  // Reemplaza con la URL correcta de tu aplicación
 
     if (strpos($referer, $paginaAutorizada) === false) {
         // Redirigir al usuario a index.php si la solicitud no proviene de la página autorizada
@@ -58,6 +58,7 @@
             $productoNombre = $producto["nombre"];
             $cantidad = $producto["cantidad"];
             $precio = $producto["precio"];
+            // $estado = $producto["estado"];
 
             // Insertar en la base de datos
             $stmt->execute();

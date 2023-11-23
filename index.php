@@ -4,40 +4,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facturando pedido.</title>
+    <title>Iniciar Sesion</title>
     <link rel="stylesheet" href="./css/styles.css">
+
+    <!-- <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        form {
+            width: 200px;
+            margin: 0 auto;
+            margin-top: 50px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style> -->
+
+    <style>
+        body{
+            margin: 0 !important;
+        }
+    </style>
 </head>
 
 <body>
-    <header>
-        <!-- <h1>App de Facturación</h1> -->
-        <a href="./php/facturas_antiguas.php" class="revisar-facturas">Revisar Facturas</a>
-    </header>
+    <?php
+    // Inicia la sesión
+    session_start();
 
+    // Verifica si ya hay una sesión activa
+    if (isset($_SESSION['usuario'])) {
+        header("Location: ./php/index.php");
+        session_destroy();
+        exit();
+    }
 
-    <form action="./php/factura.php" method="post" id="formulario">
-        <h1>App de Facturación</h1>
+    // Verifica si se ha enviado el formulario de inicio de sesión
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        // Conecta a la base de datos (reemplaza 'usuario', 'contraseña' y 'nombre_base_de_datos' con tus propios valores)
+        $conexion = new mysqli("localhost", "root", "", "facturacion");
 
-        <label for="cliente">Cliente:</label>
-        <input type="text" id="cliente" name="cliente" required>
+        // Verifica la conexión
+        if ($conexion->connect_error) {
+            die("Error de conexión: " . $conexion->connect_error);
+        }
 
-        <label for="producto">Producto:</label>
-        <input type="text" id="producto" name="producto">
+        // Obtiene las credenciales del formulario
+        $usuario = $_POST['usuario'];
+        $contraseña = $_POST['contraseña'];
 
-        <label for="cantidad">Cantidad:</label>
-        <input type="number" id="cantidad" name="cantidad">
+        // Consulta SQL para verificar las credenciales
+        $consulta = "SELECT * FROM usuarios WHERE usuario='$usuario' AND contraseña='$contraseña'";
+        $resultado = $conexion->query($consulta);
 
-        <label for="precio">Precio unitario:</label>
-        <input type="number" id="precio" name="precio" step="0.01">
+        // Verifica si las credenciales son válidas
+        if ($resultado && $resultado->num_rows > 0) {
+            // Inicia la sesión y almacena el nombre de usuario en la variable de sesión
+            $_SESSION['usuario'] = $usuario;
+            header("Location: ./php/index.php"); // Redirige a la página principal
+            exit();
+        } else {
+            echo "<div class='contenedor-alerta' style='margin-top: 25px;'><div class='alerta-error'>Usuario o contraseña incorrecta.</div></div>";
+        }
 
-        <button type="button" onclick="agregarProducto()">Agregar Producto</button>
-        <button type="submit" id="generarFacturaBtn">Generar Factura</button>
-    </form>
+        // Cierra la conexión
+        $conexion->close();
+    }
+    ?>
+    <main style="display: flex; width: 100%; justify-content: center;">
+        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+            <label for="usuario">Usuario:</label>
+            <input type="text" id="usuario" name="usuario" required>
 
+            <label for="contraseña">Contraseña:</label>
+            <input type="password" id="contraseña" name="contraseña" required>
 
-    <div class="" id="lista-productos"></div>
-
-    <script src="./js/script.js"></script>
+            <button type="submit">Iniciar Sesión</button>
+        </form>
+    </main>
 </body>
 
 </html>
