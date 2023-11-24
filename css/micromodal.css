@@ -1,6 +1,6 @@
-/**************************\
-  Basic Modal Styles
-\**************************/
+/**************************/
+/* Basic Modal Styles     */
+/**************************/
 
 .modal {
   font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir,
@@ -46,12 +46,12 @@
 }
 
 .modal__close {
-  background: transparent !important;
+  background: transparent;
   border: 0;
 }
 
 .modal__header .modal__close:before {
-  content: "\2715" !important;
+  content: "\2715";
 }
 
 .modal__content {
@@ -63,35 +63,18 @@
 
 .modal__btn {
   font-size: 0.875rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  padding: 0.5rem 1rem;
   background-color: #e6e6e6;
   color: rgba(0, 0, 0, 0.8);
   border-radius: 0.25rem;
-  border-style: none;
-  border-width: 0;
+  border: none;
   cursor: pointer;
-  -webkit-appearance: button;
-  text-transform: none;
-  overflow: visible;
-  line-height: 1.15;
-  margin: 0;
-  will-change: transform;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-  transition: -webkit-transform 0.25s ease-out;
   transition: transform 0.25s ease-out;
-  transition: transform 0.25s ease-out, -webkit-transform 0.25s ease-out;
+  will-change: transform;
 }
 
 .modal__btn:focus,
 .modal__btn:hover {
-  -webkit-transform: scale(1.05);
   transform: scale(1.05);
 }
 
@@ -100,9 +83,10 @@
   color: #fff;
 }
 
-/**************************\
-    Demo Animation Style
-  \**************************/
+/**************************/
+/* Demo Animation Style   */
+/**************************/
+
 @keyframes mmfadeIn {
   from {
     opacity: 0;

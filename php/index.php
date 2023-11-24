@@ -7,8 +7,6 @@ if (!isset($_SESSION['usuario'])) {
     exit();
 }
 
-
-
 // Verifica si se ha enviado el formulario para cerrar sesión
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cerrar_sesion'])) {
     // Destruye la sesión
@@ -32,10 +30,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cerrar_sesion'])) {
 
 <body>
     <header class="header">
-        <!-- <h1>App de Facturación</h1> -->
         <a href="./facturas_antiguas.php" class="revisar-facturas">Revisar Facturas</a>
         <span class="span">Bienvenido <?php echo $_SESSION['usuario'] ?></span>
     </header>
+
     <style>
         body {
             display: flex;
@@ -59,6 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cerrar_sesion'])) {
             padding: 10px;
         }
     </style>
+
     <main>
         <form action="./factura.php" method="post" id="formulario">
             <h1>App de Facturación</h1>
@@ -78,14 +77,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cerrar_sesion'])) {
             <button class="button" type="button" onclick="agregarProducto()">Agregar Producto</button>
             <button class="button" type="submit" id="generarFacturaBtn">Generar Factura</button>
         </form>
+
         <div class="" id="lista-productos"></div>
     </main>
 
-
-
-
     <!-- Footer con JavaScript para mostrar la hora actualizada y el botón de cerrar sesión -->
-
     <footer>
         <form class="formulario" method="post">
             <span id="hora-actual"></span>

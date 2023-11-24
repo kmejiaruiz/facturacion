@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesion</title>
+    <title>Iniciar Sesión</title>
     <link rel="stylesheet" href="./css/styles.css">
 
-    <!-- <style>
+    <style>
         body {
-            font-family: Arial, sans-serif;
+            margin: 0 !important;
         }
 
         form {
@@ -32,12 +32,6 @@
             border: none;
             cursor: pointer;
         }
-    </style> -->
-
-    <style>
-        body{
-            margin: 0 !important;
-        }
     </style>
 </head>
 
@@ -46,7 +40,7 @@
     // Inicia la sesión
     session_start();
 
-    // Verifica si ya hay una sesión activa
+    // Verifica si ya hay una sesión activa y redirige
     if (isset($_SESSION['usuario'])) {
         header("Location: ./php/index.php");
         session_destroy();
@@ -85,6 +79,7 @@
         $conexion->close();
     }
     ?>
+
     <main style="display: flex; width: 100%; justify-content: center;">
         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
             <label for="usuario">Usuario:</label>

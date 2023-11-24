@@ -18,11 +18,7 @@ precio AS precio_individual,
 FROM
 facturas";
 $resultado = $conexion->query($sql);
-
 ?>
-
-
-
 
 <!DOCTYPE html>
 <html lang="es">
@@ -32,21 +28,18 @@ $resultado = $conexion->query($sql);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/micromodal.css">
-    <!-- Agrega esto en el head de tu HTML -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <title>Facturas Antiguas</title>
 </head>
 
 <body>
 
-    <!-- <h1>Facturas Antiguas</h1> -->
-
     <?php
-    // Verifica si hay facturas almacenadas
     if ($resultado && $resultado->num_rows > 0) {
-        echo "<div class='contenedor-alerta'><div class='informacion-alerta'>Facturas Antiguas&excl;</div></div>";
         echo "<table>";
         echo '<tr>
         <th>ID Factura</th>
@@ -69,9 +62,7 @@ $resultado = $conexion->query($sql);
 
             $precioFinal = $fila['precio_final'];
 
-            // Verificamos si la factura se ha reembolsado o no
             $facturaId = $fila['factura_id'];
-            // Verifica si la factura ya ha sido reembolsada
             $sqlEstadoFactura = "SELECT estado FROM facturas WHERE id = ?";
             $stmtEstadoFactura = $conexion->prepare($sqlEstadoFactura);
             $stmtEstadoFactura->bind_param("i", $facturaId);
@@ -82,7 +73,6 @@ $resultado = $conexion->query($sql);
 
             if ($reembolsado == "Reembolsado") {
                 $precioFinal = number_format(-$precioFinal, 2);
-
                 echo "<td style='color:red;'>C$ $precioFinal</td>";
             } else {
                 $precioFinal = number_format($precioFinal, 2);
@@ -92,8 +82,7 @@ $resultado = $conexion->query($sql);
             echo "<td style='font-style:italic;'>{$fila['estado']}</td>";
     ?>
             <td style="text-align: center;">
-                <a class="checkout" href="#!" data-micromodal-trigger="modalReembolso" data-id="<?php echo $fila['factura_id'];
-                                                                                                ?>">Reembolsar</a>
+                <a class="checkout" href="#!" data-micromodal-trigger="modalReembolso" data-id="<?php echo $fila['factura_id']; ?>">Reembolsar</a>
             </td>
     <?php
             echo "</tr>";
@@ -105,7 +94,6 @@ $resultado = $conexion->query($sql);
         echo "<div class='contenedor-alerta'><div class='alerta-error'>No hay facturas guardadas con anterioridad.</div></div>";
     }
 
-    // Cierra la conexión
     $conexion->close();
     ?>
     <button class="button" onclick="regresar()">Regresar a la Página Inicial</button>
@@ -120,8 +108,6 @@ $resultado = $conexion->query($sql);
         }
     </script>
 
-
-    <!-- modal -->
     <div id="modalReembolso" class="modal micromodal-slide" aria-hidden="true">
         <div class="modal__overlay" tabindex="-1" data-micromodal-close>
             <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modalReembolsoTitle">
@@ -131,14 +117,11 @@ $resultado = $conexion->query($sql);
                     </h2>
                     <button class="modal__close" aria-label="Close modal" data-micromodal-close></button>
                 </header>
-                <!-- Contenido del modal -->
                 <div class="modal__content">
                     <h2 id="modalReembolsoTitle">Confirmar Reembolso</h2>
                     <p>¿Estás seguro de que deseas realizar el reembolso?</p>
-                    <p>Esta accion no se puede deshacer.</p>
+                    <p>Esta acción no se puede deshacer.</p>
 
-
-                    <!-- Pie del modal -->
                     <div class="modal__footer">
                         <button class="modal__btn" data-micromodal-close aria-label="Cancelar">Cancelar</button>
                         <button class="modal__btn modal__btn-primary" id="confirmarReembolso" data-id="">Confirmar</button>
@@ -162,23 +145,16 @@ $resultado = $conexion->query($sql);
 
         document.getElementById('confirmarReembolso').addEventListener('click', function() {
             var facturaId = this.getAttribute('data-id');
-            // var nuevoEstado = document.getElementById('estadoReembolso').value;
-
-            // Realizar una solicitud AJAX para actualizar el estado en el servidor
             $.ajax({
                 type: 'POST',
-                url: './actualizar_estado.php', // Nombre del archivo PHP que manejará la actualización
+                url: './actualizar_estado.php',
                 data: {
                     id: facturaId,
                 },
                 success: function(response) {
-                    // Cierra el modal
                     MicroModal.close('modalReembolso');
-
-                    // Muestra la notificación de éxito o mensaje de error con Toastify después de un breve retraso
                     setTimeout(function() {
                         if (response.success) {
-                            // Si la respuesta indica éxito
                             Toastify({
                                 text: response.message,
                                 duration: 2500,
@@ -188,7 +164,6 @@ $resultado = $conexion->query($sql);
                                 stopOnFocus: true,
                             }).showToast();
                         } else {
-                            // Si la respuesta indica un error
                             Toastify({
                                 text: response.message,
                                 duration: 2500,
@@ -196,11 +171,9 @@ $resultado = $conexion->query($sql);
                                 position: "right",
                                 backgroundColor: "red",
                                 stopOnFocus: false,
-                                close:true,
+                                close: true,
                             }).showToast();
                         }
-
-                        // Siempre recarga la página después de otro breve retraso
                         setTimeout(function() {
                             location.reload();
                         }, 2600);
@@ -210,6 +183,24 @@ $resultado = $conexion->query($sql);
                     console.error('Error en la solicitud AJAX:', error);
                 }
             });
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const hasVisited = document.cookie.includes("visited=true");
+            if (!hasVisited) {
+                Swal.fire({
+                    positon: "top-end",
+                    icon: 'info',
+                    title: 'Acceso Garantizado',
+                    text: 'Bienvenido, aqui podra visualizar las facturas generadas anteriormente, asi mismo reembolsar en caso de ser necesario',
+                    confirmButtonColor: "#3085d6",
+                });
+                const expirationDate = new Date();
+                expirationDate.setDate(expirationDate.getDate() + 30);
+                document.cookie = `visited=true; expires=${expirationDate.toUTCString()}`;
+            }
         });
     </script>
 

@@ -1,21 +1,19 @@
 let productos = [];
 
 function agregarProducto() {
-  const cliente = document.getElementById("cliente").value;
-  const producto = document.getElementById("producto").value;
-  const cantidad = document.getElementById("cantidad").value;
-  const precio = document.getElementById("precio").value;
+  // Obtener los valores de los campos del formulario
+  const cliente = document.getElementById("cliente").value.trim();
+  const producto = document.getElementById("producto").value.trim();
+  const cantidad = document.getElementById("cantidad").value.trim();
+  const precio = document.getElementById("precio").value.trim();
 
-  if (
-    cliente.trim() === "" ||
-    producto.trim() === "" ||
-    cantidad.trim() === "" ||
-    precio.trim() === ""
-  ) {
+  // Verificar si alguno de los campos está vacío
+  if (cliente === "" || producto === "" || cantidad === "" || precio === "") {
     alert("Todos los campos deben estar llenos.");
     return;
   }
 
+  // Crear un nuevo objeto producto
   const nuevoProducto = {
     cliente: cliente,
     nombre: producto,
@@ -23,7 +21,10 @@ function agregarProducto() {
     precio: precio,
   };
 
+  // Agregar el nuevo producto a la lista
   productos.push(nuevoProducto);
+
+  // Mostrar la lista de productos
   mostrarProductos();
 
   // Limpiar campos del formulario
@@ -36,6 +37,7 @@ function mostrarProductos() {
   const listaProductos = document.getElementById("lista-productos");
   listaProductos.innerHTML = "";
 
+  // Recorrer la lista de productos y mostrarlos en el HTML
   productos.forEach((producto) => {
     const item = document.createElement("div");
     item.innerHTML = `<p>${producto.cliente} - Producto: ${producto.nombre} - Cantidad: ${producto.cantidad} - Precio: ${producto.precio}</p>`;
