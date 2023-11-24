@@ -58,11 +58,13 @@
             $productoNombre = $producto["nombre"];
             $cantidad = $producto["cantidad"];
             $precio = $producto["precio"];
-            // $estado = $producto["estado"];
 
             // Insertar en la base de datos
             $stmt->execute();
         }
+
+        // Obtén el ID de la última factura insertada
+        $facturaId = $conexion->insert_id;
 
         // Cierra la conexión y el statement
         $stmt->close();
@@ -71,12 +73,10 @@
         // Marcar la factura como generada en la sesión
         $_SESSION['facturaGenerada'] = true;
 
-        // Redirigir al usuario a obtener_factura.php
-        header("Location: obtener_factura.php");
+        // Redirigir al usuario a obtener_factura.php con el ID de la nueva factura
+        header("Location: obtener_factura.php?factura_id=$facturaId");
         exit(); // Asegura que el script se detenga después de redirigir
-    }
-    ?>
-
+    } ?>
 </body>
 
 </html>

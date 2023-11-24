@@ -5,8 +5,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/styles.css">
+    <!-- Agrega esto en el head de tu HTML -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
     <title>Factura generada</title>
 </head>
+<style>
+    .custom-toast {
+        background-color: #4CAF50;
+        color: white;
+        /* padding: 16px; */
+        /* border-radius: 8px; */
+    }
+
+    .progress-container {
+        height: 5px;
+        width: 100%;
+        background-color: #ccc;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        transition: opacity 1.5s;
+    }
+
+    .progress-bar {
+        height: 100%;
+        width: 0;
+        background-color: #4CAF50;
+        position: absolute;
+        border-radius: 8px;
+        animation: progressAnimation 1.5s forwards;
+    }
+
+    @keyframes progressAnimation {
+        100% {
+            width: 100%;
+        }
+    }
+</style>
 
 <body>
     <?php
@@ -44,7 +81,7 @@
         $productos = isset($_SESSION['productos']) ? $_SESSION['productos'] : [];
 
         // Resto del código para generar la factura
-        echo "<div class='contenedor-alerta'><div class='alerta'>Factura generada con éxito &check;</div></div>";
+        // echo "<div class='contenedor-alerta'><div class='alerta'>Factura generada con éxito &check;</div></div>";
 
         if (!empty($productos)) {
             // Mostrar la factura
@@ -77,8 +114,8 @@
         }
     } ?>
 
-    <button onclick="imprimirFactura()">Imprimir Factura</button>
-    <button onclick="regresar()">Regresar a la Página Inicial</button>
+    <button class="button" clas onclick="imprimirFactura()">Imprimir Factura</button>
+    <button class="button" onclick="regresar()">Regresar a la Página Inicial</button>
 
     <script>
         function imprimirFactura() {
@@ -87,6 +124,63 @@
 
         function regresar() {
             window.location.href = "./";
+        }
+    </script>
+
+    <script>
+        // Obtén el ID de la factura de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const facturaId = urlParams.get('factura_id');
+
+        // Si hay un ID de factura en la URL, muestra la notificación Toastify con un botón de cierre
+        if (facturaId) {
+
+            // Crear el contenedor de la barra de progreso
+            const progressContainer = document.createElement("div");
+            progressContainer.classList.add("progress-container");
+
+            // Crear la barra de progreso
+            const progressBar = document.createElement("div");
+            progressBar.classList.add("progress-bar");
+            progressContainer.appendChild(progressBar);
+
+            // Agregar el contenedor de la barra de progreso al cuerpo del documento
+            document.body.appendChild(progressContainer);
+
+            // Mostrar la notificación
+            const customToast = Toastify({
+                text: "Mensaje con Barra de Progreso",
+                duration: 1500, // Duración en milisegundos (1.5 segundos)
+                gravity: "top",
+                position: "right",
+                backgroundColor: "green",
+                className: "custom-toast",
+                stopOnFocus: false,
+                stopOnHover: false,
+                callback: () => {
+                    progressContainer.remove(); // Limpiar la barra de progreso al finalizar la notificación
+                },
+                close: true,
+            }).showToast();
+
+            // Actualizar la barra de progreso cada segundo
+            let progressValue = 0;
+            const updateProgressBar = () => {
+                progressValue += 10; // Incrementar el valor de la barra de progreso
+                progressBar.style.width = `${progressValue}%`;
+
+                if (progressValue < 100) {
+                    setTimeout(updateProgressBar, 150); // Actualizar cada 150 milisegundos
+                } else {
+                    setTimeout(() => {
+                        progressContainer.style.transition = "opacity 1.5s";
+                        progressContainer.style.opacity = 0;
+                        customToast.hideToast();
+                    }, 1000);
+                };
+
+                setTimeout(updateProgressBar, 150); // Iniciar la actualización después de 150 milisegundos
+            }
         }
     </script>
 </body>

@@ -12,8 +12,9 @@ id AS factura_id,
 cliente,
 producto,
 cantidad,
+estado,
 precio AS precio_individual,
-(cantidad * precio) AS precio_final
+(cantidad * (precio)) AS precio_final
 FROM
 facturas";
 $resultado = $conexion->query($sql);
@@ -31,6 +32,10 @@ $resultado = $conexion->query($sql);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/micromodal.css">
+    <!-- Agrega esto en el head de tu HTML -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
     <title>Facturas Antiguas</title>
 </head>
 
@@ -50,6 +55,7 @@ $resultado = $conexion->query($sql);
         <th>Cantidad</th>
         <th>Precio Unitario</th>
         <th>Precio Final</th>
+        <th>Estado</th>
         <th>Acciones</th>
     </tr>';
 
@@ -59,18 +65,42 @@ $resultado = $conexion->query($sql);
             echo "<td>{$fila['cliente']}</td>";
             echo "<td>{$fila['producto']}</td>";
             echo "<td>{$fila['cantidad']}</td>";
-            echo "<td>{$fila['precio_individual']}</td>";
-            echo "<td>{$fila['precio_final']}</td>";
+            echo "<td>C$ {$fila['precio_individual']}</td>";
+
+            $precioFinal = $fila['precio_final'];
+
+            // Verificamos si la factura se ha reembolsado o no
+            $facturaId = $fila['factura_id'];
+            // Verifica si la factura ya ha sido reembolsada
+            $sqlEstadoFactura = "SELECT estado FROM facturas WHERE id = ?";
+            $stmtEstadoFactura = $conexion->prepare($sqlEstadoFactura);
+            $stmtEstadoFactura->bind_param("i", $facturaId);
+            $stmtEstadoFactura->execute();
+            $stmtEstadoFactura->bind_result($reembolsado);
+            $stmtEstadoFactura->fetch();
+            $stmtEstadoFactura->close();
+
+            if ($reembolsado == "Reembolsado") {
+                $precioFinal = number_format(-$precioFinal, 2);
+
+                echo "<td style='color:red;'>C$ $precioFinal</td>";
+            } else {
+                $precioFinal = number_format($precioFinal, 2);
+                echo "<td style='color:green;'>C$ $precioFinal</td>";
+            }
+
+            echo "<td style='font-style:italic;'>{$fila['estado']}</td>";
     ?>
-            <td>
-                <a href="#" data-micromodal-trigger="modalReembolso" data-id="<?php echo $fila['factura_id']; ?>">Reembolso</a>
+            <td style="text-align: center;">
+                <a class="checkout" href="#!" data-micromodal-trigger="modalReembolso" data-id="<?php echo $fila['factura_id'];
+                                                                                                ?>">Reembolsar</a>
             </td>
     <?php
             echo "</tr>";
         }
 
         echo "</table>";
-        echo "<button onclick='imprimirFactura()'>Imprimir Factura</button>";
+        echo "<button class='button' onclick='imprimirFactura()'>Imprimir Factura</button>";
     } else {
         echo "<div class='contenedor-alerta'><div class='alerta-error'>No hay facturas guardadas con anterioridad.</div></div>";
     }
@@ -78,7 +108,7 @@ $resultado = $conexion->query($sql);
     // Cierra la conexión
     $conexion->close();
     ?>
-    <button onclick="regresar()">Regresar a la Página Inicial</button>
+    <button class="button" onclick="regresar()">Regresar a la Página Inicial</button>
 
     <script>
         function imprimirFactura() {
@@ -95,16 +125,18 @@ $resultado = $conexion->query($sql);
     <div id="modalReembolso" class="modal micromodal-slide" aria-hidden="true">
         <div class="modal__overlay" tabindex="-1" data-micromodal-close>
             <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modalReembolsoTitle">
+                <header class="modal__header">
+                    <h2 class="modal__title" id="modal-1-title">
+                        Reembolsar factura?
+                    </h2>
+                    <button class="modal__close" aria-label="Close modal" data-micromodal-close></button>
+                </header>
                 <!-- Contenido del modal -->
                 <div class="modal__content">
                     <h2 id="modalReembolsoTitle">Confirmar Reembolso</h2>
                     <p>¿Estás seguro de que deseas realizar el reembolso?</p>
-                    <p>Puedes modificar el estado de la factura antes de confirmar.</p>
-                    <select id="estadoReembolso">
-                        <option value="Pendiente">Pendiente</option>
-                        <option value="Reembolsado">Reembolsado</option>
-                        <!-- Agrega más opciones según tus necesidades -->
-                    </select>
+                    <p>Esta accion no se puede deshacer.</p>
+
 
                     <!-- Pie del modal -->
                     <div class="modal__footer">
@@ -130,7 +162,7 @@ $resultado = $conexion->query($sql);
 
         document.getElementById('confirmarReembolso').addEventListener('click', function() {
             var facturaId = this.getAttribute('data-id');
-            var nuevoEstado = document.getElementById('estadoReembolso').value;
+            // var nuevoEstado = document.getElementById('estadoReembolso').value;
 
             // Realizar una solicitud AJAX para actualizar el estado en el servidor
             $.ajax({
@@ -138,12 +170,41 @@ $resultado = $conexion->query($sql);
                 url: './actualizar_estado.php', // Nombre del archivo PHP que manejará la actualización
                 data: {
                     id: facturaId,
-                    estado: nuevoEstado
                 },
                 success: function(response) {
-                    alert(response + ", operacion exitosa"); // Puedes manejar la respuesta del servidor aquí
                     // Cierra el modal
                     MicroModal.close('modalReembolso');
+
+                    // Muestra la notificación de éxito o mensaje de error con Toastify después de un breve retraso
+                    setTimeout(function() {
+                        if (response.success) {
+                            // Si la respuesta indica éxito
+                            Toastify({
+                                text: response.message,
+                                duration: 2500,
+                                gravity: "top",
+                                position: "right",
+                                backgroundColor: "green",
+                                stopOnFocus: true,
+                            }).showToast();
+                        } else {
+                            // Si la respuesta indica un error
+                            Toastify({
+                                text: response.message,
+                                duration: 2500,
+                                gravity: "top",
+                                position: "right",
+                                backgroundColor: "red",
+                                stopOnFocus: false,
+                                close:true,
+                            }).showToast();
+                        }
+
+                        // Siempre recarga la página después de otro breve retraso
+                        setTimeout(function() {
+                            location.reload();
+                        }, 2600);
+                    }, 500);
                 },
                 error: function(error) {
                     console.error('Error en la solicitud AJAX:', error);

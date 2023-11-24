@@ -93,7 +93,7 @@
             <label for="contraseña">Contraseña:</label>
             <input type="password" id="contraseña" name="contraseña" required>
 
-            <button type="submit">Iniciar Sesión</button>
+            <button class="button" type="submit">Iniciar Sesión</button>
         </form>
     </main>
 </body>

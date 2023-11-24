@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cerrar_sesion'])) {
 </head>
 
 <body>
-    <header>
+    <header class="header">
         <!-- <h1>App de Facturación</h1> -->
         <a href="./facturas_antiguas.php" class="revisar-facturas">Revisar Facturas</a>
         <span class="span">Bienvenido <?php echo $_SESSION['usuario'] ?></span>
@@ -75,15 +75,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cerrar_sesion'])) {
             <label for="precio">Precio unitario:</label>
             <input type="number" id="precio" name="precio" step="0.01">
 
-            <label for="estado">Estado:</label>
-            <select name="estado" id="estado">
-                <option value="Pendiente">Pendiente</option>
-                <option value="Pagado">Pagado</option>
-                <!-- Puedes agregar más opciones según tus necesidades -->
-            </select>
-
-            <button type="button" onclick="agregarProducto()">Agregar Producto</button>
-            <button type="submit" id="generarFacturaBtn">Generar Factura</button>
+            <button class="button" type="button" onclick="agregarProducto()">Agregar Producto</button>
+            <button class="button" type="submit" id="generarFacturaBtn">Generar Factura</button>
         </form>
         <div class="" id="lista-productos"></div>
     </main>
@@ -98,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cerrar_sesion'])) {
             <span id="hora-actual"></span>
             <span id="fecha-actual"></span>
 
-            <button type="submit" name="cerrar_sesion">Cerrar Sesión</button>
+            <button class="button" type="submit" name="cerrar_sesion">Cerrar Sesión</button>
         </form>
     </footer>
 
