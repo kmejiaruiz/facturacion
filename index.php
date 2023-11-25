@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión</title>
     <link rel="stylesheet" href="./css/styles.css">
-
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <style>
         body {
             margin: 0 !important;
@@ -72,7 +73,16 @@
             header("Location: ./php/index.php"); // Redirige a la página principal
             exit();
         } else {
-            echo "<div class='contenedor-alerta' style='margin-top: 25px;'><div class='alerta-error'>Usuario o contraseña incorrecta.</div></div>";
+            echo '
+            <script>
+            Swal.fire({
+                position: "top-center",
+                icon: "error",
+                title: "Credenciales incorrectas",
+                showConfirmButton: false,
+                timer: 1500
+              });
+            </script>';
         }
 
         // Cierra la conexión
@@ -91,6 +101,7 @@
             <button class="button" type="submit">Iniciar Sesión</button>
         </form>
     </main>
+
 </body>
 
 </html>

@@ -91,7 +91,19 @@ $resultado = $conexion->query($sql);
         echo "</table>";
         echo "<button class='button' onclick='imprimirFactura()'>Imprimir Factura</button>";
     } else {
-        echo "<div class='contenedor-alerta'><div class='alerta-error'>No hay facturas guardadas con anterioridad.</div></div>";
+        echo "
+        <script>
+        const customAlert = Toastify({
+            text:'No hay facturas en sistema, intente nuevamente',
+            duration:16000,
+            gravity:'top',
+            position:'right',
+            backgroundColor:'red',
+            stopOnFocus:false,
+            stopOnHover:false,
+            close:true,
+        }).showToast();
+        </script>";
     }
 
     $conexion->close();

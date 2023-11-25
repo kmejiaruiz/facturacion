@@ -7,16 +7,8 @@ if (!isset($_SESSION['usuario'])) {
     exit();
 }
 
-// Verifica si se ha enviado el formulario para cerrar sesión
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cerrar_sesion'])) {
-    // Destruye la sesión
-    session_destroy();
-
-    // Redirige a login.php
-    header("Location: ../");
-    exit();
-}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -87,12 +79,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cerrar_sesion'])) {
             <span id="hora-actual"></span>
             <span id="fecha-actual"></span>
 
-            <button class="button" type="submit" name="cerrar_sesion">Cerrar Sesión</button>
+            <button class="button" type="button" onclick="confirmarCerrarSesion()">Cerrar Sesión</button>
         </form>
     </footer>
 
     <script src="../js/script.js"></script>
     <script src="../js/hora.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src='../js/swal_fire.js'></script>
+
+    
 </body>
 
 </html>
