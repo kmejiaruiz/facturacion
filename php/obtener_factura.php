@@ -61,7 +61,20 @@
     $facturaGenerada = isset($_SESSION['facturaGenerada']) ? $_SESSION['facturaGenerada'] : false;
 
     if (!$facturaGenerada) {
-        echo "<div class='contenedor-alerta'><div class='alerta-error'>No hay facturas disponibles. Intente más tarde.</div></div>";
+        echo "
+        <script>
+        const nuevaAlerta = Toastify({
+            text:'No hay facturas en sistema.',
+            duration:16000,
+            gravity:'top',
+            position:'right',
+            backgroundColor:'red',
+            stopOnHover:false,
+            stopOnFocus:false,
+            close:true,
+        }).showToast();
+        </script>
+        ";
     } else {
         $cliente = isset($_SESSION['cliente']) ? $_SESSION['cliente'] : '';
         $productos = isset($_SESSION['productos']) ? $_SESSION['productos'] : [];
@@ -91,13 +104,13 @@
 
             echo "<tr><td colspan='3'><strong>Total Factura</strong></td><td><strong>$totalFactura</strong></td></tr>";
             echo "</table>";
+            echo '<button class="button" onclick="imprimirFactura()">Imprimir Factura</button>';
         } else {
             echo "<div class='contenedor-alerta'><div class='alerta-error'>Error, la factura se encuentra vacía. Intente más tarde.</div></div>";
         }
     }
     ?>
 
-    <button class="button" onclick="imprimirFactura()">Imprimir Factura</button>
     <button class="button" onclick="regresar()">Regresar a la Página Inicial</button>
 
     <script>

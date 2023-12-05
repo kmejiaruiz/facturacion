@@ -9,7 +9,18 @@ function agregarProducto() {
 
   // Verificar si alguno de los campos está vacío
   if (cliente === "" || producto === "" || cantidad === "" || precio === "") {
-    alert("Todos los campos deben estar llenos.");
+    Toastify({
+      text: "No pueden haber campos vacios.",
+      duration: 3500,
+      gravity: "top",
+      position: "center",
+      style: {
+        background: "red",
+      },
+      close: true,
+      closeColor: "#000",
+      closePosition: "top left",
+    }).showToast();
     return;
   }
 
@@ -39,8 +50,9 @@ function mostrarProductos() {
 
   // Recorrer la lista de productos y mostrarlos en el HTML
   productos.forEach((producto) => {
-    const item = document.createElement("div");
-    item.innerHTML = `<p>${producto.cliente} - Producto: ${producto.nombre} - Cantidad: ${producto.cantidad} - Precio: ${producto.precio}</p>`;
+    const item = document.createElement("li");
+    item.className = "list-group-item";
+    item.innerHTML = `${producto.cliente} - Producto: ${producto.nombre} - Cantidad: ${producto.cantidad} - Precio: ${producto.precio}`;
     listaProductos.appendChild(item);
   });
 
@@ -54,9 +66,16 @@ document
   .addEventListener("submit", function (event) {
     // Verificar si hay productos antes de enviar el formulario
     if (productos.length === 0) {
-      alert(
-        "No se puede generar la factura debido a campos vacíos o inexistentes."
-      );
+      Toastify({
+        text: "No se pudo generar la factura, revise la informacion insertada.",
+        duration: 3500,
+        gravity: "top",
+        position: "center",
+        style: {
+          background: "red",
+        },
+        close: true,
+      }).showToast();
       event.preventDefault(); // Evita que el formulario se envíe
     } else {
       // Agregar la lista de productos al formulario antes de enviarlo

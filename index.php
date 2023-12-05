@@ -90,7 +90,7 @@
     }
     ?>
 
-    <main style="display: flex; width: 100%; justify-content: center;">
+    <main style="display: grid; place-items: center; width: 100%; height: 100vh;">
         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
             <label for="usuario">Usuario:</label>
             <input type="text" id="usuario" name="usuario" required>

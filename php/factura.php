@@ -49,7 +49,7 @@
         }
 
         // Prepara la consulta SQL
-        $stmt = $conexion->prepare("INSERT INTO facturas (cliente, producto, cantidad, precio) VALUES (?, ?, ?, ?)");
+        $stmt = $conexion->prepare("INSERT INTO facturas (cliente, producto, cantidad, precio, estado) VALUES (?, ?, ?, ?, 'Pagado')");
 
         // Enlaza los parámetros
         $stmt->bind_param("ssdd", $cliente, $productoNombre, $cantidad, $precio);
